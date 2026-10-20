@@ -3,6 +3,8 @@ import { useState } from 'react';
 import {
   Alert,
   Button,
+  Image,
+  Modal,
   ScrollView,
   StyleSheet,
   Switch,
@@ -26,6 +28,7 @@ export default function App() {
     newsletter: false,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [imageModalVisible, setImageModalVisible] = useState(false);
 
   const update = (field: keyof typeof form, value: string | boolean) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -95,7 +98,23 @@ export default function App() {
         <Switch value={form.newsletter} onValueChange={(value) => update('newsletter', value)} />
       </View>
 
+      <Button title="Show small image" onPress={() => setImageModalVisible(true)} />
+      <View style={styles.buttonSpace} />
       <Button title="Submit form" onPress={handleSubmit} />
+      <Modal
+        animationType="fade"
+        transparent
+        visible={imageModalVisible}
+        onRequestClose={() => setImageModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>App image</Text>
+            <Image source={require('./assets/icon.png')} style={styles.modalImage} />
+            <Button title="Close" onPress={() => setImageModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
       <StatusBar style="light" />
     </ScrollView>
   );
@@ -113,4 +132,9 @@ const styles = StyleSheet.create({
   input: { backgroundColor: '#fff', color: '#000', padding: 10 },
   bio: { minHeight: 100, textAlignVertical: 'top' },
   switchRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20 },
+  buttonSpace: { height: 12 },
+  modalOverlay: { alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)', flex: 1, justifyContent: 'center' },
+  modalContent: { alignItems: 'center', backgroundColor: '#fff', padding: 20 },
+  modalTitle: { color: '#000', fontSize: 18, marginBottom: 12 },
+  modalImage: { height: 100, marginBottom: 16, width: 100 },
 });
